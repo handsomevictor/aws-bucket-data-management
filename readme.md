@@ -40,7 +40,7 @@ After pressing `Enter`, if there is no error then it's successfully connect.
 
 ### (Optional - Only related to those having multiple AWS accounts)
 
-If you have multiple AWS accounts, and you want to iniate a session using one of your accounts, you have to add
+If you have multiple AWS accounts, and you want to initiate a session using one of your accounts, you have to add
 `--profile my-second-account` at the end of the command. For example:
 
 ```angular2html
@@ -95,21 +95,49 @@ aws s3 cp s3://bucket_name/specific/path/if/needed/ /path/to/bucket/or/local/ --
 
 Explanation of `--exclude` and `--include`: 
 
-`--exclude` and `--include` are used to specify which files (it's a wildcard pattern matching mechanism) to copy. 
+`--exclude` and `--include` are used to specify which files (it's a [wildcard pattern matching](https://www.geeksforgeeks.org/wildcard-pattern-matching/)
+mechanism) to copy. 
+
 For example, if you want to copy all files except those with `.csv.gz`, you can use `--exclude "*.csv.gz"`.
 
 But when you only want to just download those files with `.csv.gz` extension, you have to use `--exclude "*"` and 
 `--include "*.csv.gz"` -> it means, exclude everything, then only select those that satisfy the `--include` pattern. 
 
+### Remove a single file or a folder
 
-## Special commands
+To remove a folder, remember to add `--recursive`:
+```angular2html
+aws s3 rm s3://bucket_name/specific/path/if/needed/ --recursive
+```
 
-### Only download the data that is between 2017 Jan to 2020 April
+To remove a single file, just rm + the path to the file.
+
+Remove files that satisfy some special pattern in the file name (same wildcard matching mechanism):
+```angular2html
+aws s3 rm s3://bucket_name/specific/path/if/needed/ --recursive --exclude "*" --include "*.csv.gz"
+```
+
+
+### Create a downloadable link for others to download anything in your bucket
+Reminder: this only works for single file, not for a folder. You have to compressed the folder before using this command.
+```angular2html
+aws s3 presign s3://bucket_name/file_name --expires-in 604800
+```
+
+604800 unit is in second, and it's 7 days. It's the longest time you can set for the link to be valid.
+
+
+
+## Special Commands
+
+### Only download the data that is between 2017 Jan to 2020 April for certain exchanges
+
 ```angular2html
 aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/your/folder --exclude "*" --include "2017_*/*/*" --include "2018_*/*/*" --include "2019_*/*/*" --include "2020_0[1-4]/*/*" --exclude "*/*/*/*" --include "*Binance V2*" --include "*BinanceUS*" --include "*Bitfinex*" --include "*BitMEX*" --include "*Bitstamp*" --include "*Coinbase*" --include "*Gemini*" --include "*Huobi*" --include "*Kraken*" --include "*OkCoin*"
 ```
 
-````
+The following one will download corresponding data for all exchanges:
+```angular2htmls
 aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/your/folder --exclude "*" --include "2017_*/*/*" --include "2018_*/*/*" --include "2019_*/*/*" --include "2020_0[1-4]/*/*"
 ```
 
@@ -123,6 +151,19 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 ### 
 
 
+## Special Needs
+
+### Python Related
+
+#### Download the list of all files in a folder to local computer
+
+#### Download files that are created or modified after or before a certain date
+
+
+#### Automation of downloading / transferring the newly created / updated files to local or another bucket
+First method: use `aws s3 sync` command with `--exclude "*" --include "*.csv.gz"` to download all files with `.csv.gz` extension
+that are not existing in the destination folder.
+
 
 
 # Other Reminders
@@ -130,4 +171,5 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 2. It's better to always add `--request-payer` at the end of the command, even for your own bucket, since it won't cost you anything.
 3. It's always better to add `/` when executing any folder level commands like: `aws s3 ls s3://path/to/folder/`, because if you don't add `/`, it will
    just return you the name of this folder, and it's confusing indeed.
-4. 
+4. More wildcard pattern matching examples can be found [here](https://www.geeksforgeeks.org/wildcard-pattern-matching/).
+5. 
