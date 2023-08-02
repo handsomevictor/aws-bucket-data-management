@@ -133,7 +133,7 @@ aws s3 presign s3://bucket_name/file_name --expires-in 604800
 ### Only download the data that is between 2017 Jan to 2020 April for certain exchanges
 
 ```angular2html
-aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/your/folder --exclude "*" --include "2017_*/*/*" --include "2018_*/*/*" --include "2019_*/*/*" --include "2020_0[1-4]/*/*" --exclude "*/*/*/*" --include "*Binance V2*" --include "*BinanceUS*" --include "*Bitfinex*" --include "*BitMEX*" --include "*Bitstamp*" --include "*Coinbase*" --include "*Gemini*" --include "*Huobi*" --include "*Kraken*" --include "*OkCoin*"
+aws s3 sync s3://bucket_name/kaiko-trades/gz_v1/ /path/to/your/folder --exclude "*" --include "2017_*/*/*" --include "2018_*/*/*" --include "2019_*/*/*" --include "2020_0[1-4]/*/*" --exclude "*/*/*/*" --include "*Binance V2*" --include "*BinanceUS*" --include "*Bitfinex*" --include "*BitMEX*" --include "*Bitstamp*" --include "*Coinbase*" --include "*Gemini*" --include "*Huobi*" --include "*Kraken*" --include "*OkCoin*"
 ```
 
 The following one will download corresponding data for all exchanges:
@@ -143,6 +143,15 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 
 
 ### List all file names in a folder that are created of modified or updated after or before a certain date
+
+- In AWS CLI, you can use the following command to satisfy this need:
+
+   ```angular2html
+   aws s3 ls "s3://bucket_name/kaiko-trades/Binance V2/BTCUSDT/2023_07/" --recursive --human-readable --summarize | awk '$1 > "2023-07-25" || ($1 == "2023-07-25" && $2 >= "07:00") {print $0}'
+   ```
+   If you want to download this list, you can add `>> /path/to/your/file.txt` at the end of the command to save the result to a local txt file.
+
+- In Python, please refer to this file.......
 
 
 ### Only download files that are created or modified after or before a certain date
