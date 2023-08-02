@@ -64,26 +64,63 @@ aws s3 ls s3://kaiko-internal-delivery-mit
 
 If you want all files in all sub-folders to be listed, add `--recursive` at the end of the command.
 
-### Copy a single file to local computer or to another bucket
+### Copy a single file to local computer or to another bucket - use cp command
 To another bucket:
 ```angular2html
-aws s3 cp "s3://bucket_name/kaiko-cohlcvvwap/gz_v1/1m_per_month/bw/btcusdt/bw_btcusdt_cohlcvvwap_1m_2019_08.csv.gz" "s3://my_own_buket/folder/"
+aws s3 cp "s3://bucket_name/kaiko-cohlcvvwap/gz_v1/bw_btcusdt_cohlcvvwap_1m_2019_08.csv.gz" "s3://my_own_buket/folder/"
 ```
 
 To local computer:
 ```angular2html
+aws s3 cp "s3://bucket_name/kaiko-cohlcvvwap/gz_v1/bw_btcusdt_cohlcvvwap_1m_2019_08.csv.gz" "/local/path"
 ```
 
+### Copy all files in a folder to local computer or to another bucket - use sync or cp command
+Both sync and cp command will work for this purpose. The difference is that sync command will only copy the files that
+are not existing in the destination folder, while cp command will copy all files in the source folder to the destination
+folder, even if they are already existing in the destination folder.
 
+In summary, if you want to copy the entire contents of a folder from an S3 bucket to your local 
+machine, you can use cp with `--recursive`. However, if you want to synchronize the contents 
+between the S3 bucket and your local machine, updating only the necessary files, you should use 
+sync.
 
+```angular2html
+aws s3 sync s3://bucket_name/specific/path/if/needed/ /path/to/bucket/or/local/ --exclude "*" --include "*.csv.gz"
+```
+
+```angular2html
+aws s3 cp s3://bucket_name/specific/path/if/needed/ /path/to/bucket/or/local/ --recursive --exclude "*" --include "*.csv.gz"
+```
+
+Explanation of `--exclude` and `--include`: 
+
+`--exclude` and `--include` are used to specify which files (it's a wildcard pattern matching mechanism) to copy. 
+For example, if you want to copy all files except those with `.csv.gz`, you can use `--exclude "*.csv.gz"`.
+
+But when you only want to just download those files with `.csv.gz` extension, you have to use `--exclude "*"` and 
+`--include "*.csv.gz"` -> it means, exclude everything, then only select those that satisfy the `--include` pattern. 
 
 
 ## Special commands
 
+### Only download the data that is between 2017 Jan to 2020 April
+```angular2html
+aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/your/folder --exclude "*" --include "2017_*/*/*" --include "2018_*/*/*" --include "2019_*/*/*" --include "2020_0[1-4]/*/*" --exclude "*/*/*/*" --include "*Binance V2*" --include "*BinanceUS*" --include "*Bitfinex*" --include "*BitMEX*" --include "*Bitstamp*" --include "*Coinbase*" --include "*Gemini*" --include "*Huobi*" --include "*Kraken*" --include "*OkCoin*"
+```
+
+````
+aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/your/folder --exclude "*" --include "2017_*/*/*" --include "2018_*/*/*" --include "2019_*/*/*" --include "2020_0[1-4]/*/*"
+```
+
+
 ### List all file names in a folder that are created of modified or updated after or before a certain date
 
 
-###
+### Only download files that are created or modified after or before a certain date
+
+
+### 
 
 
 
