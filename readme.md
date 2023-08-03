@@ -1,5 +1,6 @@
 # Manage Data in AWS S3 Bucket
 
+---
 ## First things first
 
 This repo aims at providing basic and specific commands or solutions so that anyone can better manage the data
@@ -50,6 +51,7 @@ aws configure --profile victor-second-account
 aws s3 ls --profile victor-second-account
 ```
 
+---
 ## Basic commands
 
 ### List all buckets
@@ -127,7 +129,7 @@ aws s3 presign s3://bucket_name/file_name --expires-in 604800
 604800 unit is in second, and it's 7 days. It's the longest time you can set for the link to be valid.
 
 
-
+---
 ## Special Commands
 
 ### Only download the data that is between 2017 Jan to 2020 April for certain exchanges
@@ -151,7 +153,7 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
    ```
    If you want to download this list, you can add `>> /path/to/your/file.txt` at the end of the command to save the result to a local txt file.
 
-- In Python, please refer to this file.......
+- In Python, please read the following section: *Python Related*
     
     
 
@@ -205,22 +207,84 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 
 
 - **Download files that are created or modified after or before a certain date**
-    Code can be found [here](./python_example/download_concurrent.py)
+    
+    Code can be found [here](./python_example/download_files_after_some_date.py)
+    
+    More specifically, this is realized by using the matching method as below:
+    
+    ```python
+    matching_files = [obj['Key'] for obj in paginate_list_objects(s3_client,
+                                                                  bucket_name,
+                                                                  s3_folder_path)
+                      if fnmatch.fnmatch(obj['Key'],
+                                         pattern)
+                      and obj['LastModified'] > date_threshold]
+    ```
+  
+    For more details here, the obj variable also has the following attributes that could be useful sometime:
+    
+    - Key: The object's key (filename or full path).
+    - LastModified: The timestamp when the object was last modified.
+    - ETag: The entity tag (checksum) of the object.
+    - Size: The size of the object in bytes.
+    - StorageClass: The storage class of the object (e.g., STANDARD, GLACIER, etc.).
+    - Owner: The owner of the object (contains ID and DisplayName).
+    - IsLatest: A boolean value indicating whether this object is the latest version if versioning is enabled.
+    - VersionId: The version ID of the object if versioning is enabled.
+    
+- **Synchronize with other buckets: all files or specific files**
+    
+    Code can be found in [sync_with_other_bucket_all_content.py](./python_example/sync_with_other_bucket_all_content.py)
+    and [sync_with_other_bucket_specific_files.py](./python_example/sync_with_other_bucket_specific_files.py)
+    
+    For synchronization, since the aim is to synchronize the files that does not exist on the target
+    bucket, so there is no need to copy every file, just check if the file last modified date exists, see below:
+        
+    ```python
+    for source_obj in paginate_objects(s3_resource, source_bucket_name, ''):
+        source_key = source_obj.key
+        destination_obj = s3_resource.Object(destination_bucket_name, source_key)
+
+        if not destination_obj.exists() or source_obj.last_modified > destination_obj.last_modified:
+            destination_obj.copy({'Bucket': source_bucket_name, 'Key': source_key})
+            print(f"Synchronized: {source_key}")
+    ```
+     
+    But this function may take a long time to finish, so it's better to use multiprocessing or multithreading to
+    achieve this goal folder by folder.
 
 
 #### Automation of downloading / transferring the newly created / updated files to local or another bucket
-First method: use `aws s3 sync` command with `--exclude "*" --include "*.csv.gz"` to download all files with `.csv.gz` extension
-that are not existing in the destination folder.
+
+The easiest way is to write a script (either Python script or Shell script) that can achieve this aim and then deploy 
+it on a virtual machine (like AWS EC2 or Google Compute Engine), and then schedule a cronjob to let the machine run 
+the script periodically.
+
+For cronjob, you can refer to [this link](https://crontab.guru/), this tells you how to write the cronjob expression.
+
+For deploying the job, type crontab -e in your virtual machine, and then add the cronjob expression and the path to
+your script, for example:
+
+```angular2html
+0 0 * * * /path/to/your/script.sh
+```
+or
+```angular2html
+0 0 * * * python3 /path/to/your/script.py
+```
+
+If you choose to use shell script, you can use the sync command to achieve the aim, like the ones mentioned in the 
+previous section.
 
 
 
-
-
-
+---
 # Other Reminders
 1. It's better to always add `" "` to the path, especially when the path contains spaces (for example, Binance V2)
 2. It's better to always add `--request-payer` at the end of the command, even for your own bucket, since it won't cost you anything.
 3. It's always better to add `/` when executing any folder level commands like: `aws s3 ls s3://path/to/folder/`, because if you don't add `/`, it will
    just return you the name of this folder, and it's confusing indeed.
 4. More wildcard pattern matching examples can be found [here](https://www.geeksforgeeks.org/wildcard-pattern-matching/).
-5. 
+5. All functions that may take a long time to finish, it's better to use multiprocessing or multithreading to achieve the goal.
+   If MFA enabled, remember to only use multithreading, as difference threads can share memory so that you only
+   need to input your MFA token once.
