@@ -153,34 +153,7 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
    If you want to download this list, you can add `>> /path/to/your/file.txt` at the end of the command to save the result to a local txt file.
 
 - In Python, please read the following section: *Python Related*
-    
-    
 
-## Only download files that are created or modified after or before a certain date
-
-Didn't find a direct way to achieve this, but it can be done by using shell script. But not recommended since very
-possibly there would be a lot of bugs...but it is possible..
-
-```shell
-#!/bin/bash
-
-bucket=your-bucket-name
-after_date='2023-07-31'
-
-aws s3 ls s3://$bucket --recursive | while read -r line
-do
-  # Extract the last modified date and the file key from the line
-  last_modified_date=$(echo $line | awk '{print $1}')
-  file_key=$(echo $line | awk '{print $4}')
-
-  # Compare the last modified date with the specified date
-  if [[ "$last_modified_date" > "$after_date" ]]
-  then
-    # Download the file if it was modified after the specified date
-    aws s3 cp s3://$bucket/$file_key .
-  fi
-done
-```
 
 # Special Needs
 
