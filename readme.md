@@ -167,7 +167,7 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 
 - **Download single file to local computer**
 
-    Code can be found [here](./download_single_file.py)
+    Code can be found [here](./python_example/download_single_file.py)
     
     More specifically, the download function is the following one:
     ```python
@@ -178,7 +178,7 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 
 - **Download the list of names of all files for convenience of downloading filtered files to local**
     
-    Code can be found [here](./download_all_file_names.py)
+    Code can be found [here](./python_example/download_all_file_names.py)
     
     More specifically, the download function is the following one:
     ```python
@@ -188,7 +188,7 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 
 - **Download many files parallelly**
     
-    Code can be found [here](./download_concurrent.py)
+    Code can be found [here](./python_example/download_concurrent.py)
     
     More specifically, the download function contains multiprocessing or multithreading skills in Python:
     ```python
@@ -204,7 +204,8 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 
 
 
-#### Download files that are created or modified after or before a certain date
+- **Download files that are created or modified after or before a certain date**
+    Code can be found [here](./python_example/download_concurrent.py)
 
 
 #### Automation of downloading / transferring the newly created / updated files to local or another bucket
