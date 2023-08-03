@@ -152,7 +152,8 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
    If you want to download this list, you can add `>> /path/to/your/file.txt` at the end of the command to save the result to a local txt file.
 
 - In Python, please refer to this file.......
-
+    
+    
 
 ### Only download files that are created or modified after or before a certain date
 
@@ -164,7 +165,44 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 
 ### Python Related
 
-#### Download the list of all files in a folder to local computer
+- **Download single file to local computer**
+
+    Code can be found [here](./download_single_file.py)
+    
+    More specifically, the download function is the following one:
+    ```python
+    s3_cli.download_file(Bucket=bucket_name,
+                         Key=file_name,  # file_name is the full path to the file in the bucket
+                         Filename=local_file_name)  # local_file_name is the full path you want the local file to have in your computer
+    ```
+
+- **Download the list of names of all files for convenience of downloading filtered files to local**
+    
+    Code can be found [here](./download_all_file_names.py)
+    
+    More specifically, the download function is the following one:
+    ```python
+    kwargs = {'Bucket': bucket_name, 'Prefix': folder_name}
+    s3_cli.list_objects_v2(**kwargs)
+    ```
+
+- **Download many files parallelly**
+    
+    Code can be found [here](./download_concurrent.py)
+    
+    More specifically, the download function contains multiprocessing or multithreading skills in Python:
+    ```python
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        list(tqdm(pool.map(download_single_file_to_local,
+                           all_files_to_download,
+                           repeat(file_type)),
+                  total=len(all_files_to_download)))
+    ```
+    Basically, put the full paths of files that you would like to download as a list and pass it to
+    `all_files_to_download`, then the multiprocessing or multithreading will execute the download single file function
+    in a parallel way for the list of files.
+
+
 
 #### Download files that are created or modified after or before a certain date
 
@@ -172,6 +210,9 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 #### Automation of downloading / transferring the newly created / updated files to local or another bucket
 First method: use `aws s3 sync` command with `--exclude "*" --include "*.csv.gz"` to download all files with `.csv.gz` extension
 that are not existing in the destination folder.
+
+
+
 
 
 
