@@ -1,6 +1,5 @@
 # Manage Data in AWS S3 Bucket
 
----
 ## First things first
 
 This repo aims at providing basic and specific commands or solutions so that anyone can better manage the data
