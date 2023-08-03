@@ -22,7 +22,7 @@ Remember to test if everything is working by typing `aws s3 ls` in your terminal
 Remember, when accessing the bucket that does not belong to you, very possibly you need to add `--request-payer` at
 the end of every command. If not, you will get an error message saying that you don't have `permission` to access the bucket.
 
-### (Optional - Only related to those having MFA enabled)
+## (Optional - Only related to those having MFA enabled)
 
 When MFA is enabled, and you have configured well on your local computer (by typing `aws configure` - the configuration
 details will be saved to `~/.aws/credentials`), you can use the following command to initiate a session:
@@ -39,7 +39,7 @@ serial number.
 
 After pressing `Enter`, if there is no error then it's successfully connect.
 
-### (Optional - Only related to those having multiple AWS accounts)
+## (Optional - Only related to those having multiple AWS accounts)
 
 If you have multiple AWS accounts, and you want to initiate a session using one of your accounts, you have to add
 `--profile my-second-account` at the end of the command. For example:
@@ -130,9 +130,9 @@ aws s3 presign s3://bucket_name/file_name --expires-in 604800
 
 
 ---
-## Special Commands
+# Special Commands
 
-### Only download the data that is between 2017 Jan to 2020 April for certain exchanges
+## Only download the data that is between 2017 Jan to 2020 April for certain exchanges
 
 ```angular2html
 aws s3 sync s3://bucket_name/kaiko-trades/gz_v1/ /path/to/your/folder --exclude "*" --include "2017_*/*/*" --include "2018_*/*/*" --include "2019_*/*/*" --include "2020_0[1-4]/*/*" --exclude "*/*/*/*" --include "*Binance V2*" --include "*BinanceUS*" --include "*Bitfinex*" --include "*BitMEX*" --include "*Bitstamp*" --include "*Coinbase*" --include "*Gemini*" --include "*Huobi*" --include "*Kraken*" --include "*OkCoin*"
@@ -144,7 +144,7 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
 ```
 
 
-### List all file names in a folder that are created of modified or updated after or before a certain date
+## List all file names in a folder that are created of modified or updated after or before a certain date
 
 - In AWS CLI, you can use the following command to satisfy this need:
 
@@ -157,15 +157,15 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
     
     
 
-### Only download files that are created or modified after or before a certain date
+## Only download files that are created or modified after or before a certain date
 
 
-### 
+##
 
 
-## Special Needs
+# Special Needs
 
-### Python Related
+## Python Related
 
 - **Download single file to local computer**
 
@@ -254,7 +254,7 @@ aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/y
     achieve this goal folder by folder.
 
 
-#### Automation of downloading / transferring the newly created / updated files to local or another bucket
+## Automation of downloading / transferring the newly created / updated files to local or another bucket
 
 The easiest way is to write a script (either Python script or Shell script) that can achieve this aim and then deploy 
 it on a virtual machine (like AWS EC2 or Google Compute Engine), and then schedule a cronjob to let the machine run 
