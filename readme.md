@@ -50,6 +50,17 @@ aws configure --profile victor-second-account
 aws s3 ls --profile victor-second-account
 ```
 
+## (Optional - But for convenience it's better to add)
+
+In your AWS credential file (`~/.aws/credential`), it's better to add `mfa_serial` to the default profile, like below:
+
+```angular2html
+[default]
+aws_access_key_id = xxxx
+aws_secret_access_key = xxxx
+mfa_serial = arn:aws:iam::xxx:mfa/your_arn_name
+```
+
 ---
 ## Basic commands
 
