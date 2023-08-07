@@ -16,10 +16,16 @@ information in your AWS account - My Security Credentials - Access keys (access 
 Default region and Deafault output format, you can just leave it blank by pressing enter. Remember to generate your
 own key first, and store it in a safe place.
 
-Remember to test if everything is working by typing `aws s3 ls` in your terminal. If you don't see an error, then it's good to go.
+Remember to test if everything is working by typing `aws s3 ls` in your terminal. If you don't see an error, then it's
+good to go.
 
 Remember, when accessing the bucket that does not belong to you, very possibly you need to add `--request-payer` at
-the end of every command. If not, you will get an error message saying that you don't have `permission` to access the bucket.
+the end of every command. If not, you will get an error message saying that you don't have `permission` to access the
+bucket.
+
+For the client-side cost incurred of requesting data, please refer to
+here [AWS Pricing](https://aws.amazon.com/s3/pricing/). In the example 4, there is a note about Reqester
+Pays. Generally, if you are using someone else's service, on your side only data transfer cost would be incurred.
 
 ## (Optional - Only related to those having MFA enabled)
 
@@ -284,7 +290,7 @@ previous section.
 ---
 # Other Reminders
 1. It's better to always add `" "` to the path, especially when the path contains spaces (for example, Binance V2)
-2. It's better to always add `--request-payer` at the end of the command, even for your own bucket, since it won't cost you anything.
+2. It's better to always add `--request-payer` at the end of any command, even for your own bucket, since it won't cost you anything.
 3. It's always better to add `/` when executing any folder level commands like: `aws s3 ls s3://path/to/folder/`, because if you don't add `/`, it will
    just return you the name of this folder, and it's confusing indeed.
 4. More wildcard pattern matching examples can be found [here](https://www.geeksforgeeks.org/wildcard-pattern-matching/).
