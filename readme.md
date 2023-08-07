@@ -34,7 +34,7 @@ details will be saved to `~/.aws/credentials`), you can use the following comman
 
 ```angular2html
 MFATOKEN=123456 MFAUSER=zhenning.li
-AWSJSON=$(aws sts get-session-token --serial-number arn:aws:iam::731234585745:mfa/$MFAUSER --token-code $MFATOKEN);
+AWSJSON=$(aws sts get-session-token --serial-number arn:aws:iam::1234567890:mfa/$MFAUSER --token-code $MFATOKEN);
 export AWS_SESSION_TOKEN=$(echo $AWSJSON | jq -r .Credentials.SessionToken);
 export AWS_SECRET_ACCESS_KEY=$(echo $AWSJSON | jq -r .Credentials.SecretAccessKey);
 export AWS_ACCESS_KEY_ID=$(echo $AWSJSON | jq -r .Credentials.AccessKeyId)
@@ -77,7 +77,7 @@ aws s3 ls
 
 ### List all folders or files in a path
 ```angular2html
-aws s3 ls s3://kaiko-internal-delivery-mit
+aws s3 ls s3://bucket_name
 ```
 
 If you want all files in all sub-folders to be listed, add `--recursive` at the end of the command.
@@ -156,7 +156,7 @@ aws s3 sync s3://bucket_name/kaiko-trades/gz_v1/ /path/to/your/folder --exclude 
 
 The following one will download corresponding data for all exchanges:
 ```angular2htmls
-aws s3 sync s3://kaiko-internal-delivery-syracuse/kaiko-trades/gz_v1/ /path/to/your/folder --exclude "*" --include "2017_*/*/*" --include "2018_*/*/*" --include "2019_*/*/*" --include "2020_0[1-4]/*/*"
+aws s3 sync s3://bucket_name/kaiko-trades/gz_v1/ /path/to/your/folder --exclude "*" --include "2017_*/*/*" --include "2018_*/*/*" --include "2019_*/*/*" --include "2020_0[1-4]/*/*"
 ```
 
 
