@@ -12,7 +12,7 @@ Download link: [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/gettin
 
 After installation, remember to configure it by typing `aws configure` in your terminal. You will be asked to
 input your AWS Access Key ID, AWS Secret Access Key, Default region name and Default output format. You can find these
-information in your AWS account - My Security Credentials - Access keys (access key ID and secret access key), and for
+information in your `AWS account - My Security Credentials - Access keys (access key ID and secret access key)`, and for
 Default region and Deafault output format, you can just leave it blank by pressing enter. Remember to generate your
 own key first, and store it in a safe place.
 
