@@ -171,6 +171,17 @@ aws s3 sync s3://bucket_name/kaiko-trades/gz_v1/ /path/to/your/folder --exclude 
 
 - In Python, please read the following section: *Python Related*
 
+## List all file names in a folder that have file size less or larger than a threshold
+
+- In AWS CLI, you can use the following command to satisfy this need:
+
+   ```angular2html
+   aws s3api list-objects-v2 --bucket your-bucket-name --prefix prefix-folder-name/ | jq -r '.Contents[] | select(.Size <= 60).Key'
+   ```
+   Here the threshold is set to be lower than 60 Bytes.
+
+   If you want to download this list, you can add `>> /path/to/your/file.txt` at the end of the command to save the result to a local txt file.
+
 
 # Special Needs
 
