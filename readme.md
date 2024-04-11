@@ -1,3 +1,5 @@
+> **Author:** *[Zhenning Li](https://zhenning-li.com)*
+
 # Manage Data in AWS S3 Bucket using AWS CLI or Python
 
 ## First things first
